@@ -1,92 +1,122 @@
-from product import Product, Clothing, Basket, Food, Drink, Book
-def test_product_class():
-    # create Product
-    p = Product('Dress', 25)
-    assert p.name == 'Dress'
-    assert p.price == 25
+class Product:
+    def __init__(self, name, price):
+        'initialization of variables'
+        self._price = price
+        self.name = name
 
-    # checks price
-    try:
-        p = Product('Dress', -20)
-    except ValueError as e:
-        assert str(e) == 'Price have to be >0'
+    @property
+    def price(self):
+        return self._price
 
-    # check name property
-    p.name = 'Shirt'
-    assert p.name == 'Shirt'
+    @price.setter
+    def price(self, price):
+        'checks price'
+        if price < 0:
+            raise ValueError("Price have to be >0")
+        self._price = price
 
-    # checks anme
-    try:
-        p.name = 'Dres2s'
-    except ValueError as e:
-        assert str(e) == 'Name should contain only letters'
+    @property
+    def name(self):
+        return self._name
 
-def test_clothing_class():
-    trousers = Clothing('Trousers', 22, 'L', 'Men')
-    assert trousers.name == 'Trousers'
-    assert trousers.price == 22
-    assert trousers.size == 'L'
-    assert trousers.gender == 'Men'
+    @name.setter
+    def name(self, name):
+        'checks name of product'
+        if not name.isalpha():
+            raise ValueError("Name should contain only letters")
+        self._name = name
 
-    try:
-        a = Clothing('Shirt', 20, 'XXS', 'Men')
-    except ValueError as e:
-        assert str(e) == 'Size can only be XS,S,M,L,XL '
 
-def test_food_class():
-    # creates Food
-    f = Food('Ice cream', 1.5)
-    assert f.name == 'Ice cream'
-    assert f.price == 1.5
-    assert f.type == 'Food'
+class Clothing(Product):
+    def __init__(self,name, price,  size, gender):
+        'initialization of variables'
+        super().__init__(name, price)
+        self.size = size
+        self.gender = gender
+    
+    def __str__(self):
+        'info about clothes'
+        return f'This {self.name} is for {self.gender} with size{self.size}'
+    
+    @property
+    def size(self):
+        return self._size
 
-def test_drink_class():
-    # Creates Drink
-    d = Drink('Juice', 3)
-    assert d.name == 'Juice'
-    assert d.price == 3
-    assert d.type == 'Drink'
+    @size.setter
+    def size(self, size):
+        example_size=['XS','S','M','L','XL']
+        if size not in example_size:
+            raise ValueError("Size can only be XS,S,M,L,XL ")
+        self._size = size
 
-def test_book_class():
-    # create Book
-    b = Book('Death on the Nile', 10, 'Detective', 123)
-    assert b.name == 'Death on the Nile'
-    assert b.price == 10
-    assert b.genre == 'Detective'
-    assert b.page_count == 123
+class Nutrition(Product):
+    type_of=None
+    def __init__(self,name, price):
+        'initialization of variables'
+        super().__init__(name, price)
 
-    assert str(b) == 'Death on the Nile (Detective) - 123 pages'
 
-def test_basket_class():
-    # create Basket
-    basket = Basket()
+class Food(Nutrition):
+    def __init__(self,name, price):
+        'initialization of variables'
+        super().__init__(name, price)
+    type_of = "Food"
+    
+    def __str__(self):
+        return f'This {self.name} is {self.type_of} and costs {self.price}'
 
-    # adds product
-    basket.add_product('Trousers', 2)
-    assert basket.products == {'Trousers': 2}
 
-    # adds same product
-    basket.add_product('Trousers', 3)
-    assert basket.products == {'Trousers': 5}
+class Drink(Nutrition):
+    def __init__(self, name, price):
+        'initialization of variables'
+        super().__init__(name, price)
+    type_of = "Drink"
 
-    # adds another type of product
-    basket.add_product('Dress', 3)
-    assert basket.products == {'Trousers': 5,'Dress': 3}
+    def __str__(self):
+        return f'This {self.name} is {self.type_of} and costs {self.price}'
 
-    # remove product
-    basket.remove_product('Trousers', 2)
-    assert basket.products == {'Trousers': 3,'Dress': 3}
-    basket.remove_product('Trousers', 2)
-    assert basket.products == {'Trousers': 1,'Dress': 3}
-    basket.remove_product('Trousers', 1)
-    basket.remove_product('Dress', 3)
-    assert basket.products == {}
-    assert basket.remove_product('Trousers', 1) == 'In basket there is no trousers '
+class Book(Product):
+    def __init__(self, name, price, genre, page_count):
+        'initialization of variables'
+        super().__init__(name, price)
+        self.genre = genre
+        self.page_count = page_count
 
-    # calculates suma
-    trousers = Product('Trousers', 20)
-    lipton=Product('lipton', 3)
-    basket.add_product(trousers, 2)
-    basket.add_product(lipton, 4)
-    assert basket.get_total_price(basket.products) == 52
+    def __str__(self):
+        'info about book'
+        return f"{self.name} ({self.genre}) - {self.page_count} pages"
+
+class Basket:
+    def __init__(self):
+        'initialization of variables'
+        self.products = {}
+
+    def add_product(self, name, quantity=1):
+        'adds products to a basket'
+        if name in self.products:
+            self.products[name] += quantity
+        else:
+            self.products[name] = quantity
+
+    def remove_product(self, name, quantity=1):
+        'removes product from a basket'
+        if name in self.products:
+            if self.products[name] <= quantity:
+                del self.products[name]
+            else:
+                self.products[name] -= quantity
+        else:
+            return f'In basket there is no {name.lower()} '
+
+    @staticmethod
+    def get_total_price(products):
+        'calculates price'
+        suma = 0
+        for name, quantity in products.items():
+            suma += name.price * quantity
+        return suma
+
+
+
+
 
