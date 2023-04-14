@@ -88,5 +88,5 @@ def test_basket_class():
     lipton=Product('lipton', 3)
     basket.add_product(trousers, 2)
     basket.add_product(lipton, 4)
-    assert basket.get_total_price() == 52
+    assert basket.get_total_price(basket.products) == 52
 
