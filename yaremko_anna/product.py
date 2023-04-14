@@ -1,7 +1,7 @@
 class Product:
     def __init__(self, name, price):
         "initialization of variables"
-        self.price = price
+        self._price = price
         self.name = name
 
     @property
@@ -97,11 +97,12 @@ class Basket:
                 self.products[name] -= quantity
         else:
             return f"In basket there is no {name.lower()} "
-
+    
+    @staticmethod
     def get_total_price(self):
         "calculates price"
         suma = 0
-        for name, quantity in self.products.items():
+        for name, quantity in products.items():
             suma += name.price * quantity
         return suma
 
