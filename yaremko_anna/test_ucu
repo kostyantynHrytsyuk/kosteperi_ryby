@@ -1,0 +1,101 @@
+import unittest
+
+from ucu_implementation import Person, Visitor, Student, Teacher, Classroom, UCU
+
+import unittest
+
+import unittest
+
+class TestUCU(unittest.TestCase):
+
+    def test_add_person(self):
+        ucu = UCU()
+        person = Person("John Dog", 25, "male", "visit campus")
+        ucu.add_person(person)
+        self.assertEqual(len(ucu.visitors), 1)
+        self.assertEqual(ucu.visitors[0], person)
+
+    def test_add_person_multiple(self):
+        ucu = UCU()
+        people = [
+            Person("John Dog", 25, "male", "visit campus"),
+            Person("Jane Smith", 20, "female", "attend lecture")
+        ]
+        ucu.add_person(people)
+        self.assertEqual(len(ucu.visitors), 2)
+        self.assertEqual(ucu.visitors, people)
+
+    def test_is_empty(self):
+        ucu = UCU()
+        self.assertTrue(ucu.is_empty())
+
+        person = Person("John Dog", 25, "male", "visit campus")
+        ucu.add_person(person)
+        self.assertFalse(ucu.is_empty())
+
+    def test_add_class(self):
+        ucu = UCU()
+        classroom = Classroom(101, 20)
+        teacher = Teacher("Jane Smith", 30, "female")
+        students = [
+            Student("John Dog", 25, "male"),
+            Student("Alice Brown", 22, "female")
+        ]
+        result = ucu.add_class(classroom)
+        self.assertEqual(result, None)
+        self.assertEqual(len(ucu.visitors), 0)
+        self.assertEqual(len(UCU.classrooms), 1)
+        self.assertEqual(UCU.number_of_class(), 1)
+
+        result = classroom.registration(teacher, students)
+        self.assertEqual(result, "Registration is succesful")
+        self.assertEqual(len(classroom.people), 2)
+
+        result = ucu.add_class(classroom)
+        self.assertEqual(result, None)
+        self.assertEqual(len(ucu.visitors), 2)
+        self.assertEqual(len(UCU.classrooms), 2)
+
+    def test_add_class_with_invalid_student(self):
+        ucu = UCU()
+        classroom = Classroom(101, 20)
+        teacher = Teacher("Jane Smith", 30, "female")
+        student = Person("John Dog", 25, "male", "visit campus")
+
+        result = ucu.add_class(classroom)
+        self.assertEqual(result, None)
+
+        with self.assertRaises(ValueError):
+            classroom.registration(teacher, student)
+
+    def test_add_class_with_too_many_students(self):
+        ucu = UCU()
+        classroom = Classroom(101, 1)
+        teacher = Teacher("Jane Smith", 30, "female")
+        students = [
+            Student("John Dog", 25, "male"),
+            Student("Alice Brown", 22, "female")
+        ]
+
+        result = ucu.add_class(classroom)
+        self.assertEqual(result, None)
+
+        result = classroom.registration(teacher, students)
+        self.assertEqual(result, "This is too small classroom for all students")
+        self.assertEqual(len(classroom.people), 0)
+
+    def test_add_class_when_already_registered(self):
+        ucu = UCU()
+        classroom = Classroom(101, 20)
+        teacher = Teacher("Jane Smith", 30, "female")
+        students = [
+            Student("John Dog", 25, "male"),
+            Student("Alice Brown", 22, "female")
+        ]
+
+        result = ucu.add_class(classroom)
+        self.assertEqual(result, None)
+
+
+if __name__ == '__main__':
+    unittest.main()
