@@ -13,11 +13,11 @@ class Mammal(Animal):
 
 class Dog(Mammal):
     """Dog"""
-    species = 'Canis lupus familiaris'
-    num_legs = 4
     def __init__(self, name, breed):
         super().__init__(name)
         self._breed = breed
+        self.species = 'Canis lupus familiaris'
+        self.num_legs = 4
     @staticmethod
     def make_sound():
         """Make a sound"""
@@ -35,11 +35,11 @@ class Dog(Mammal):
 
 class Cat(Mammal):
     """Cat"""
-    species = 'Felis catus'
-    num_legs = 4
     def __init__(self, name, color):
         super().__init__(name)
         self._color = color
+        self.species = 'Felis catus'
+        self.num_legs = 4
     @staticmethod
     def make_sound():
         """Make a sound"""
@@ -73,7 +73,9 @@ class FlyingAnimal:
 
 class Bird(FlyingAnimal):
     """Bird"""
-    species=None
+    def __init__(self, name):
+        super().__init__(name)
+        self.species=None
     @staticmethod
     def make_sound():
         """Make a sound"""
@@ -81,11 +83,11 @@ class Bird(FlyingAnimal):
 
 class Parrot(FlyingAnimal):
     """Parrot"""
-    species = 'Psittaciformes'
     def __init__(self, name, language):
         super().__init__(name)
         self._language = language
         self._wingspan = 20
+        self.species = 'Psittaciformes'
     @staticmethod
     def make_sound():
         """Make a sound"""
