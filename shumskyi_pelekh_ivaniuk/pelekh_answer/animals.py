@@ -3,6 +3,7 @@ classes for Anya Syvkova's asserts
 """
 class Animal:
     """A base class representing an animal."""
+    species = None
     def __init__(self, name: str) -> None:
         """Constructs an instance of the Animal class with a given name."""
         self._name = name
