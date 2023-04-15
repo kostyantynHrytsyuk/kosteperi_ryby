@@ -30,7 +30,6 @@ assert student1.name == "Alice"
 assert student1.age == 20
 assert student1.sex == "female"
 assert student1.goal == "study"
-print(str(student1))
 assert str(student1)=='This is Alice. She`s 20 and her goal is study'
 assert(student1._Student__age == 20)
 
